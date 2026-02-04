@@ -4,6 +4,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -15,15 +16,12 @@ public class RedisBasicCommand {
         this.redisTemplate = redisTemplate;
     }
 
-   // @PostConstruct
-    public void trial(){
+    @PostConstruct
+    public void basicCommonMethod(){
 
         //Set Key Value
         redisTemplate.opsForValue().set("trial","Prabhakar");
         System.out.println("Inserted");
-
-        //rename Key
-       redisTemplate.rename("trial","name");
 
         //set Expiry of key
         Boolean expiry = redisTemplate.expire("name", 20, TimeUnit.SECONDS);
@@ -33,8 +31,11 @@ public class RedisBasicCommand {
         Long ttl = redisTemplate.getExpire("name");
         System.out.println("TTL :- "+ ttl);
 
-        //Get Remaining Time of key  in Second.....
+        //rename Key
         //Here Value Will get override if key is already present
+        redisTemplate.rename("trial","name");
+
+        //Get Remaining Time of key  in Second.....
         Long remaining = redisTemplate.getExpire("name", TimeUnit.SECONDS);
         System.out.println("Remaining :- "+ remaining);
 
@@ -58,5 +59,12 @@ public class RedisBasicCommand {
         Boolean name = redisTemplate.unlink("name");
         System.out.println("Unlinked Name :- "+ name);
 
+
+        //Flush All DB Keys.........................................
+        Objects.requireNonNull(redisTemplate.getConnectionFactory(),"Connection Factory Must Required");
+        redisTemplate.getConnectionFactory()
+                .getConnection()
+                .serverCommands()
+                .flushDb();
     }
 }
