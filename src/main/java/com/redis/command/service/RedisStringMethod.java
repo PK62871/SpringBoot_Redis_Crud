@@ -75,12 +75,14 @@ public class RedisStringMethod {
         System.out.println("DECR Number By :-"+num3);
 
 
+        
         //Replace The Old Value Of key With New value...........................
         redisTemplate.opsForValue().set("replace","Value1");
         Boolean replaced = redisTemplate.opsForValue().setIfPresent("replace", "Value2");
         System.out.println("Is Replaced :-"+replaced);
 
 
+        
         //Get The Key Value and Delete The Key....................
         Object replace = redisTemplate.opsForValue().getAndDelete("replace");
         System.out.println("Get And Deleted :-" + replace);
